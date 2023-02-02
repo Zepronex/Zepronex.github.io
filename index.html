@@ -1,0 +1,88 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+  <title>FashionClothes</title> 
+  <style> 
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    } 
+    body { 
+      font-family: Arial, sans-serif; 
+    } 
+    header { 
+      background-color: lightgray; 
+      padding: 20px; 
+    } 
+    h1 { 
+      text-align: center; 
+    } 
+    nav ul { 
+      display: flex; 
+      justify-content: space-around; 
+      list-style: none; 
+    } 
+    a { 
+      color: black; 
+      text-decoration: none; 
+    } 
+    main { 
+      display: flex; 
+      flex-wrap: wrap; 
+      justify-content: center; 
+      padding: 20px; 
+    } 
+    .product { 
+      background-color: white; 
+      border: 1px solid lightgray; 
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); 
+      margin: 20px; 
+      max-width: 300px; 
+      text-align: center; 
+      width: 100%; 
+    } 
+    .product img { 
+      width: 100%; 
+    } 
+    footer { 
+      background-color: lightgray; 
+      color: white; 
+      padding: 20px; 
+      text-align: center; 
+    } 
+  </style> 
+</head> 
+<body> 
+  <header> 
+    <h1>FashionClothes</h1> 
+    <nav> 
+      <ul> 
+        <li><a href="#">Home</a></li> 
+        <li><a href="#">Shop</a></li> 
+        <li><a href="#">About</a></li> 
+        <li><a href="#">Contact</a></li> 
+      </ul> 
+    </nav> 
+  </header> 
+  <main> 
+    <h2>New Arrivals</h2> 
+    <div class="product"> 
+      <img src="https://via.placeholder.com/150x150" alt="A blue shirt"> 
+      <h3>Blue Shirt</h3> 
+      <p>$20</p> 
+      <button>Add to Cart</button> 
+    </div> 
+    <div class="product"> 
+      <img src="https://via.placeholder.com/150x150" alt="A red dress"> 
+      <h3>Red Dress</h3> 
+      <p>$50</p> 
+      <button>Add to Cart</button> 
+    </div> 
+  </main> 
+  <footer> 
+    <p>&copy; 2023 FashionClothes</p> 
+  </footer> 
+</body> 
+</html>
+``
