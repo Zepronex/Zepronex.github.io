@@ -3,23 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KPI Toggle – Sweden vs Stockholm</title>
+    <title>KPI Trend Sweden vs Stockholm</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-
-    <!-- Tailwind CSS (utility-first styling) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Papa Parse (CSV → JS) -->
+    <!-- Papa Parse -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
     <style>
       body {
-        font-family: "Inter", sans-serif;
-        background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+        font-family: Georgia, "Times New Roman", serif;
+        background: radial-gradient(circle at top left, #eef2ff 0%, #e0e7ff 40%, #f9fafb 90%);
         min-height: 100vh;
         display: flex;
         justify-content: center;
@@ -28,45 +25,51 @@
       }
       #card {
         width: 100%;
-        max-width: 640px;
-        background: white;
-        border-radius: 1.5rem; /* 24px */
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
-        padding: 2rem;
+        max-width: 700px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(6px);
+        border: 1px solid #e5e7eb;
+        border-radius: 28px;
+        box-shadow: 0 25px 45px -10px rgba(0, 0, 0, 0.08);
+        padding: 2.5rem 2rem;
       }
       #toggleBtn {
-        transition: transform 0.2s ease;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
       }
       #toggleBtn:hover {
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px -5px rgba(88, 80, 236, 0.4);
       }
     </style>
   </head>
   <body>
-    <div id="card" class="flex flex-col gap-6">
-      <div class="relative w-full" style="height:350px;">
+    <div id="card" class="flex flex-col gap-8">
+      <h1 class="text-center text-purple-700 text-3xl md:text-4xl font-bold tracking-wide">
+        KPI Trend 1980 to 2024
+      </h1>
+
+      <div class="relative w-full" style="height:380px;">
         <canvas id="myChart" class="absolute inset-0 w-full"></canvas>
       </div>
 
       <button
         id="toggleBtn"
-        class="self-center px-6 py-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg focus:outline-none"
+        class="self-center px-8 py-3 rounded-full bg-gradient-to-r from-indigo-500 via-purple-600 to-fuchsia-600 text-white text-lg font-semibold shadow-md focus:outline-none"
       >
         Show Stockholm KPI
       </button>
 
-      <p id="info" class="text-gray-600 leading-relaxed text-center">
-        Hej och välkommen till Elliots extremt coola hemsida som illustrerar Sveriges KPI-historia – tryck på knappen för att växla mellan hela landet och Stor-Stockholm.
+      <p id="info" class="text-gray-700 leading-relaxed text-center text-base">
+        Den här sidan visar hur KPI har utvecklats i Sverige och i Storstockholm. Klicka på knappen för att växla mellan serierna.
       </p>
     </div>
 
     <script>
-      /* -------------------------------------------------------
-       * Fetch CSVs → build two datasets with a SHARED Y-axis range
-       * -----------------------------------------------------*/
       const ctx = document.getElementById("myChart").getContext("2d");
-      let chart, showingSweden = true;
-      let dataSweden, dataStockholm;
+      let chart;
+      let showingSweden = true;
+      let dataSweden;
+      let dataStockholm;
 
       Promise.all([
         fetch("sweden_kpi.csv").then(r => r.text()),
@@ -76,87 +79,88 @@
           const swedenRows = Papa.parse(swedenCSV, {
             header: true,
             dynamicTyping: true,
-            skipEmptyLines: true,
+            skipEmptyLines: true
           }).data;
 
           const stockholmRows = Papa.parse(stockholmCSV, {
             header: true,
             dynamicTyping: true,
-            skipEmptyLines: true,
+            skipEmptyLines: true
           }).data;
 
-          // Extract labels & values
           const labels = swedenRows.map(r => r.Year);
-          const swedenValues    = swedenRows.map(r => Object.values(r)[1]);
+          const swedenValues = swedenRows.map(r => Object.values(r)[1]);
           const stockholmValues = stockholmRows.map(r => Object.values(r)[1]);
 
-          // 🔑  Global min/max for a static Y-axis
           const allValues = swedenValues.concat(stockholmValues);
-          const globalMin = Math.floor(Math.min(...allValues) / 10) * 10; // round to nearest 10
-          const globalMax = Math.ceil (Math.max(...allValues) / 10) * 10;
+          const globalMin = Math.floor(Math.min(...allValues) / 10) * 10;
+          const globalMax = Math.ceil(Math.max(...allValues) / 10) * 10;
 
           dataSweden = {
             labels,
             datasets: [
               {
-                label: "KPI – Hela Sverige (1980–2024)",
+                label: "KPI Sverige 1980 to 2024",
                 data: swedenValues,
                 fill: true,
                 tension: 0.35,
-                borderColor: "rgba(99,102,241,1)",
+                borderColor: "#6366f1",
                 backgroundColor: "rgba(99,102,241,.15)",
-                pointRadius: 3,
-              },
-            ],
+                pointRadius: 3
+              }
+            ]
           };
 
           dataStockholm = {
             labels,
             datasets: [
               {
-                label: "KPI – Stor-Stockholm (1980–2024)",
+                label: "KPI Storstockholm 1980 to 2024",
                 data: stockholmValues,
                 fill: true,
                 tension: 0.35,
-                borderColor: "rgba(139,92,246,1)",
+                borderColor: "#8b5cf6",
                 backgroundColor: "rgba(139,92,246,.15)",
-                pointRadius: 3,
-              },
-            ],
+                pointRadius: 3
+              }
+            ]
           };
 
-          // Initial render (Sweden) with fixed Y-axis
           chart = new Chart(ctx, {
             type: "line",
             data: dataSweden,
             options: {
               responsive: true,
               animation: {
-                duration: 800,
-                easing: "easeInOutQuart",
+                duration: 900,
+                easing: "easeInOutQuart"
               },
               plugins: {
-                legend: { display: false },
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    label: c => c.parsed.y.toFixed(1) + " indexenheter"
+                  }
+                }
               },
               scales: {
+                x: { grid: { display: false } },
                 y: {
                   min: globalMin,
                   max: globalMax,
-                  ticks: {
-                    stepSize: 50,
-                  },
-                },
-              },
-            },
+                  ticks: { stepSize: 50 },
+                  grid: { color: "rgba(0,0,0,.05)" }
+                }
+              }
+            }
           });
         })
-        .catch(err => console.error("CSV load error:", err));
+        .catch(err => console.error("CSV load error", err));
 
-      /* -------------------------------------------------------
-       * Toggle logic – swap datasets & button label
-       * -----------------------------------------------------*/
       document.getElementById("toggleBtn").addEventListener("click", () => {
-        if (!dataSweden || !dataStockholm) return; // still loading
+        if (!dataSweden || !dataStockholm) return;
 
         showingSweden = !showingSweden;
         chart.data = showingSweden ? dataSweden : dataStockholm;
