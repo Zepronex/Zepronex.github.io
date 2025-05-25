@@ -55,7 +55,7 @@
       </button>
 
       <p id="info" class="text-gray-600 leading-relaxed text-center">
-        Hej och välkommen till Elliots hemsida som illustrerar Sveriges kontra Stor-Stockholms fastighetsprisindex. Tryck på knappen för att växla mellan hela landet och Stor-Stockholm.
+        Hej och välkommen till Elliot Claessons hemsida som illustrerar Sveriges kontra Stor-Stockholms fastighetsprisindex från 1980 - 2024. Tryck på knappen för att växla mellan hela landet och Stor-Stockholm.
       </p>
     </div>
 
@@ -91,7 +91,7 @@
 
           const allValues = swedenValues.concat(stockholmValues);
           const globalMin = Math.floor(Math.min(...allValues) / 10) * 10;
-          const globalMax = Math.ceil(Math.max(...allValues) / 10) * 10;
+          const globalMax = Math.ceil(Math.max(...allValues) / 10) * 10 + 50;
 
           dataSweden = {
             labels,
