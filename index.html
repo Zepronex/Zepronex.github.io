@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Graph Toggle</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CSS (utility‑first styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js (graphing library) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+      #card {
+        width: 100%;
+        max-width: 640px;
+        background: white;
+        border-radius: 1.5rem; /* 24px */
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+      }
+      #toggleBtn {
+        transition: transform 0.2s ease;
+      }
+      #toggleBtn:hover {
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="card" class="flex flex-col gap-6">
+      <canvas id="myChart" class="w-full" style="height: 350px"></canvas>
+
+      <button
+        id="toggleBtn"
+        class="self-center px-6 py-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg focus:outline-none"
+      >
+        Show Graph 2
+      </button>
+
+      <p id="info" class="text-gray-600 leading-relaxed text-center">
+        <!-- ✨ Replace this placeholder with your own descriptive text -->
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum.
+      </p>
+    </div>
+
+    <script>
+      /* -------------------------------------------------------
+       * 1️⃣  Data sets – tweak to your own numbers & labels
+       * -----------------------------------------------------*/
+      const dataOne = {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        datasets: [
+          {
+            label: "Visitors",
+            data: [150, 200, 170, 220, 180, 260],
+            fill: true,
+            tension: 0.4,
+            backgroundColor: "rgba(99, 102, 241, 0.2)",
+            borderColor: "rgba(99, 102, 241, 1)",
+            pointRadius: 4,
+          },
+        ],
+      };
+
+      const dataTwo = {
+        labels: ["Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        datasets: [
+          {
+            label: "Sales",
+            data: [120, 190, 300, 250, 220, 310],
+            fill: true,
+            tension: 0.4,
+            backgroundColor: "rgba(139, 92, 246, 0.2)",
+            borderColor: "rgba(139, 92, 246, 1)",
+            pointRadius: 4,
+          },
+        ],
+      };
+
+      /* -------------------------------------------------------
+       * Render chart & toggle logic
+       * -----------------------------------------------------*/
+      let showingGraphOne = true;
+      const ctx = document.getElementById("myChart").getContext("2d");
+
+      const chart = new Chart(ctx, {
+        type: "line",
+        data: dataOne,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 800,
+            easing: "easeInOutQuart", // smooth morph
+          },
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: { beginAtZero: true },
+          },
+        },
+      });
+
+      document.getElementById("toggleBtn").addEventListener("click", () => {
+        showingGraphOne = !showingGraphOne;
+        chart.data = showingGraphOne ? dataOne : dataTwo;
+        chart.update();
+        // swap button label
+        document.getElementById("toggleBtn").textContent =
+          showingGraphOne ? "Show Graph 2" : "Show Graph 1";
+      });
+    </script>
+  </body>
+</html>
