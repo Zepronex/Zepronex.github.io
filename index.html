@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KPI Toggle - Sweden vs Stockholm</title>
+    <title>KPI Toggle – Sweden vs Stockholm</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
@@ -44,17 +44,19 @@
   </head>
   <body>
     <div id="card" class="flex flex-col gap-6">
-      <canvas id="myChart" class="w-full" style="height: 350px"></canvas>
+      <div class="relative w-full h-[350px]">
+        <canvas id="myChart" class="absolute inset-0 w-full h-full"></canvas>
+      </div>
 
       <button
         id="toggleBtn"
         class="self-center px-6 py-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg focus:outline-none"
       >
-        Show Stockholm KPI
+        Show Stockholm KPI
       </button>
 
       <p id="info" class="text-gray-600 leading-relaxed text-center">
-        Hej och välkommen till Elliots extremt coola hemsida som illustrerar Sveriges KPI-historia - tryck på knappen för att växla mellan hela landet och Stor-Stockholm.
+        Hej och välkommen till Elliots extremt coola hemsida som illustrerar Sveriges KPI-historia – tryck på knappen för att växla mellan hela landet och Stor‑Stockholm.
       </p>
     </div>
 
@@ -92,7 +94,7 @@
             labels,
             datasets: [
               {
-                label: "KPI - Hela Sverige (1980-2024)",
+                label: "KPI – Hela Sverige (1980–2024)",
                 data: swedenValues,
                 fill: true,
                 tension: 0.35,
@@ -107,7 +109,7 @@
             labels,
             datasets: [
               {
-                label: "KPI Stor-Stockholm (1980-2024)",
+                label: "KPI – Stor‑Stockholm (1980–2024)",
                 data: stockholmValues,
                 fill: true,
                 tension: 0.35,
@@ -153,7 +155,7 @@
         chart.update();
 
         document.getElementById("toggleBtn").textContent =
-          showingSweden ? "Show Stockholm KPI" : "Show Sweden KPI";
+          showingSweden ? "Show Stockholm KPI" : "Show Sweden KPI";
       });
     </script>
   </body>
