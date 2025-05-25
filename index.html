@@ -3,78 +3,70 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KPI Trend Sweden and Stockholm</title>
+    <title>Unga på bostadsmarknaden</title>
 
-    <!-- Tailwind CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Papa Parse -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
     <style>
-      /* Layout */
       body {
-        font-family: Georgia, "Times New Roman", serif;
-        background: #f5f6fa;
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
         min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 1.5rem;
+        padding: 2rem;
       }
       #card {
         width: 100%;
-        max-width: 720px;
+        max-width: 640px;
         background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 20px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-        padding: 2.25rem 1.75rem;
+        border-radius: 1.5rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
       }
-      /* Button */
       #toggleBtn {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: transform 0.2s ease;
       }
       #toggleBtn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(79, 70, 229, 0.3);
-      }
-      /* Chart grid line colour override */
-      .chart-grid line {
-        stroke: rgba(0, 0, 0, 0.04);
       }
     </style>
   </head>
   <body>
     <div id="card" class="flex flex-col gap-6">
-      <h1 class="text-center text-indigo-700 text-3xl md:text-4xl font-bold">
-        KPI Trend 1980 to 2024
-      </h1>
+      <!-- Dynamic title -->
+      <h2 id="graphTitle" class="text-center text-indigo-700 text-lg font-semibold">
+        Fastighetsprisindex - Hela Sverige (1980-2024)
+      </h2>
 
-      <div class="relative w-full" style="height:360px;">
+      <div class="relative w-full" style="height:350px;">
         <canvas id="myChart" class="absolute inset-0 w-full"></canvas>
       </div>
 
       <button
         id="toggleBtn"
-        class="self-center px-7 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-semibold focus:outline-none"
+        class="self-center px-6 py-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg focus:outline-none"
       >
-        Show Stockholm KPI
+        Visa Stor-Stockholm
       </button>
 
-      <p id="info" class="text-gray-700 text-center text-base">
-        The chart shows how the consumer price index has developed in Sweden and in the Stockholm region from 1980 to 2024. Click the button to switch between the two series.
+      <p id="info" class="text-gray-600 leading-relaxed text-center">
+        Hej och välkommen till Elliots hemsida som illustrerar Sveriges kontra Stor-Stockholms fastighetsprisindex. Tryck på knappen för att växla mellan hela landet och Stor-Stockholm.
       </p>
     </div>
 
     <script>
       const ctx = document.getElementById("myChart").getContext("2d");
+      const titleEl = document.getElementById("graphTitle");
+      const btnEl = document.getElementById("toggleBtn");
+
       let chart;
       let showingSweden = true;
-      let dataSweden;
-      let dataStockholm;
+      let dataSweden, dataStockholm;
 
       Promise.all([
         fetch("sweden_kpi.csv").then(r => r.text()),
@@ -105,12 +97,12 @@
             labels,
             datasets: [
               {
-                label: "KPI Sweden",
+                label: "Fastighetsprisindex - Hela Sverige (1980-2024)",
                 data: swedenValues,
                 fill: true,
                 tension: 0.35,
-                borderColor: "#4f46e5",
-                backgroundColor: "rgba(79,70,229,0.12)",
+                borderColor: "rgba(99,102,241,1)",
+                backgroundColor: "rgba(99,102,241,.15)",
                 pointRadius: 3
               }
             ]
@@ -120,12 +112,12 @@
             labels,
             datasets: [
               {
-                label: "KPI Stockholm",
+                label: "Fastighetsprisindex - Stor-Stockholm (1980-2024)",
                 data: stockholmValues,
                 fill: true,
                 tension: 0.35,
-                borderColor: "#7c3aed",
-                backgroundColor: "rgba(124,58,237,0.12)",
+                borderColor: "rgba(139,92,246,1)",
+                backgroundColor: "rgba(139,92,246,.15)",
                 pointRadius: 3
               }
             ]
@@ -138,44 +130,36 @@
               responsive: true,
               animation: {
                 duration: 800,
-                easing: "easeInOutQuad"
+                easing: "easeInOutQuart"
               },
-              plugins: {
-                legend: { display: false },
-                tooltip: {
-                  callbacks: {
-                    label: c => c.parsed.y.toFixed(1)
-                  }
-                }
-              },
+              plugins: { legend: { display: false } },
               scales: {
-                x: {
-                  grid: { display: false },
-                  ticks: { maxRotation: 45, minRotation: 45 }
-                },
                 y: {
                   min: globalMin,
                   max: globalMax,
-                  ticks: {
-                    stepSize: 50
-                  },
-                  grid: { color: "rgba(0,0,0,0.04)" }
+                  ticks: { stepSize: 50 }
                 }
               }
             }
           });
         })
-        .catch(err => console.error("CSV load error", err));
+        .catch(err => console.error("CSV load error:", err));
 
-      document.getElementById("toggleBtn").addEventListener("click", () => {
+      btnEl.addEventListener("click", () => {
         if (!dataSweden || !dataStockholm) return;
 
         showingSweden = !showingSweden;
         chart.data = showingSweden ? dataSweden : dataStockholm;
         chart.update();
 
-        document.getElementById("toggleBtn").textContent =
-          showingSweden ? "Show Stockholm KPI" : "Show Sweden KPI";
+        // Update title and button text
+        if (showingSweden) {
+          titleEl.textContent = dataSweden.datasets[0].label;
+          btnEl.textContent = "Visa Stor-Stockholm";
+        } else {
+          titleEl.textContent = dataStockholm.datasets[0].label;
+          btnEl.textContent = "Visa hela Sverige";
+        }
       });
     </script>
   </body>
