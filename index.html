@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eliio</title>
+    <title>KPI Trend Sweden and Stockholm</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,53 +14,58 @@
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
     <style>
+      /* Layout */
       body {
         font-family: Georgia, "Times New Roman", serif;
-        background: radial-gradient(circle at top left, #eef2ff 0%, #e0e7ff 40%, #f9fafb 90%);
+        background: #f5f6fa;
         min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 2rem;
+        padding: 1.5rem;
       }
       #card {
         width: 100%;
-        max-width: 700px;
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(6px);
-        border: 1px solid #e5e7eb;
-        border-radius: 28px;
-        box-shadow: 0 25px 45px -10px rgba(0, 0, 0, 0.08);
-        padding: 2.5rem 2rem;
+        max-width: 720px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        padding: 2.25rem 1.75rem;
       }
+      /* Button */
       #toggleBtn {
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
       #toggleBtn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 30px -5px rgba(88, 80, 236, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(79, 70, 229, 0.3);
+      }
+      /* Chart grid line colour override */
+      .chart-grid line {
+        stroke: rgba(0, 0, 0, 0.04);
       }
     </style>
   </head>
   <body>
-    <div id="card" class="flex flex-col gap-8">
-      <h1 class="text-center text-purple-700 text-3xl md:text-4xl font-bold tracking-wide">
+    <div id="card" class="flex flex-col gap-6">
+      <h1 class="text-center text-indigo-700 text-3xl md:text-4xl font-bold">
         KPI Trend 1980 to 2024
       </h1>
 
-      <div class="relative w-full" style="height:380px;">
+      <div class="relative w-full" style="height:360px;">
         <canvas id="myChart" class="absolute inset-0 w-full"></canvas>
       </div>
 
       <button
         id="toggleBtn"
-        class="self-center px-8 py-3 rounded-full bg-gradient-to-r from-indigo-500 via-purple-600 to-fuchsia-600 text-white text-lg font-semibold shadow-md focus:outline-none"
+        class="self-center px-7 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-semibold focus:outline-none"
       >
         Show Stockholm KPI
       </button>
 
-      <p id="info" class="text-gray-700 leading-relaxed text-center text-base">
-        Den här sidan visar hur KPI har utvecklats i Sverige och i Storstockholm. Klicka på knappen för att växla mellan serierna.
+      <p id="info" class="text-gray-700 text-center text-base">
+        The chart shows how the consumer price index has developed in Sweden and in the Stockholm region from 1980 to 2024. Click the button to switch between the two series.
       </p>
     </div>
 
@@ -100,12 +105,12 @@
             labels,
             datasets: [
               {
-                label: "KPI Sverige 1980 to 2024",
+                label: "KPI Sweden",
                 data: swedenValues,
                 fill: true,
                 tension: 0.35,
-                borderColor: "#6366f1",
-                backgroundColor: "rgba(99,102,241,.15)",
+                borderColor: "#4f46e5",
+                backgroundColor: "rgba(79,70,229,0.12)",
                 pointRadius: 3
               }
             ]
@@ -115,12 +120,12 @@
             labels,
             datasets: [
               {
-                label: "KPI Storstockholm 1980 to 2024",
+                label: "KPI Stockholm",
                 data: stockholmValues,
                 fill: true,
                 tension: 0.35,
-                borderColor: "#8b5cf6",
-                backgroundColor: "rgba(139,92,246,.15)",
+                borderColor: "#7c3aed",
+                backgroundColor: "rgba(124,58,237,0.12)",
                 pointRadius: 3
               }
             ]
@@ -132,26 +137,29 @@
             options: {
               responsive: true,
               animation: {
-                duration: 900,
-                easing: "easeInOutQuart"
+                duration: 800,
+                easing: "easeInOutQuad"
               },
               plugins: {
-                legend: {
-                  display: false
-                },
+                legend: { display: false },
                 tooltip: {
                   callbacks: {
-                    label: c => c.parsed.y.toFixed(1) + " indexenheter"
+                    label: c => c.parsed.y.toFixed(1)
                   }
                 }
               },
               scales: {
-                x: { grid: { display: false } },
+                x: {
+                  grid: { display: false },
+                  ticks: { maxRotation: 45, minRotation: 45 }
+                },
                 y: {
                   min: globalMin,
                   max: globalMax,
-                  ticks: { stepSize: 50 },
-                  grid: { color: "rgba(0,0,0,.05)" }
+                  ticks: {
+                    stepSize: 50
+                  },
+                  grid: { color: "rgba(0,0,0,0.04)" }
                 }
               }
             }
