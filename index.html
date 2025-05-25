@@ -8,12 +8,12 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 
-    <!-- Tailwind CSS (utility‑first styling) -->
+    <!-- Tailwind CSS (utility-first styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Papa Parse (CSV → JS) -->
+    <!-- Papa Parse (CSV → JS) -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
     <style>
@@ -52,17 +52,17 @@
         id="toggleBtn"
         class="self-center px-6 py-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg focus:outline-none"
       >
-        Show Stockholm KPI
+        Show Stockholm KPI
       </button>
 
       <p id="info" class="text-gray-600 leading-relaxed text-center">
-        Hej och välkommen till Elliots extremt coola hemsida som illustrerar Sveriges KPI-historia – tryck på knappen för att växla mellan hela landet och Stor‑Stockholm.
+        Hej och välkommen till Elliots extremt coola hemsida som illustrerar Sveriges KPI-historia – tryck på knappen för att växla mellan hela landet och Stor-Stockholm.
       </p>
     </div>
 
     <script>
       /* -------------------------------------------------------
-       * Fetch CSVs → build two separate data objects
+       * Fetch CSVs → build two datasets with a SHARED Y-axis range
        * -----------------------------------------------------*/
       const ctx = document.getElementById("myChart").getContext("2d");
       let chart, showingSweden = true;
@@ -85,10 +85,15 @@
             skipEmptyLines: true,
           }).data;
 
-          // Assume column order: Year, Value
+          // Extract labels & values
           const labels = swedenRows.map(r => r.Year);
-          const swedenValues = swedenRows.map(r => Object.values(r)[1]);
+          const swedenValues    = swedenRows.map(r => Object.values(r)[1]);
           const stockholmValues = stockholmRows.map(r => Object.values(r)[1]);
+
+          // 🔑  Global min/max for a static Y-axis
+          const allValues = swedenValues.concat(stockholmValues);
+          const globalMin = Math.floor(Math.min(...allValues) / 10) * 10; // round to nearest 10
+          const globalMax = Math.ceil (Math.max(...allValues) / 10) * 10;
 
           dataSweden = {
             labels,
@@ -109,7 +114,7 @@
             labels,
             datasets: [
               {
-                label: "KPI – Stor‑Stockholm (1980–2024)",
+                label: "KPI – Stor-Stockholm (1980–2024)",
                 data: stockholmValues,
                 fill: true,
                 tension: 0.35,
@@ -120,13 +125,12 @@
             ],
           };
 
-          // Render initial chart (Sweden)
+          // Initial render (Sweden) with fixed Y-axis
           chart = new Chart(ctx, {
             type: "line",
             data: dataSweden,
             options: {
               responsive: true,
-              
               animation: {
                 duration: 800,
                 easing: "easeInOutQuart",
@@ -136,7 +140,11 @@
               },
               scales: {
                 y: {
-                  beginAtZero: false,
+                  min: globalMin,
+                  max: globalMax,
+                  ticks: {
+                    stepSize: 50,
+                  },
                 },
               },
             },
@@ -155,7 +163,7 @@
         chart.update();
 
         document.getElementById("toggleBtn").textContent =
-          showingSweden ? "Show Stockholm KPI" : "Show Sweden KPI";
+          showingSweden ? "Show Stockholm KPI" : "Show Sweden KPI";
       });
     </script>
   </body>
